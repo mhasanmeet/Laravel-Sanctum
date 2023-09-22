@@ -152,5 +152,56 @@ Route::post('/logout', [AuthController::class, 'logout']);
 
 ![logout](./public/img/logout.png)
 
-16. Now create a login AuthController function & Protected auth route
+16. Now create a login AuthController function & Public auth route
 
+```php
+
+public function login(Request $request)
+{
+    $fields = $request->validate([
+        'email' => 'required|string|unique:users,email',
+        'password' => 'required|string|confirmed'
+    ]);
+
+    //Check email
+    $user = User::where('email', $fields['email'])->first();
+
+    // Check password
+    if(!$user || !Hash::check($fields['password'], $user->password))
+    {
+        return response([
+            'message' => "Unauthorize Creds"
+        ]);
+    }
+
+    $token = $user->createToken('myapptoken')->plainTextToken;
+
+    $response = [
+        'user' => $user,
+        'token' => $token
+    ];
+
+    return response($response, 201);
+}
+```
+
+```php
+
+Route::post('/login', [AuthController::class, 'login']);
+```
+17. Now we able to create login by right credentials
+
+![login](./public/img/login.png)
+
+## Finally 
+
+Finally we're able to create a Products API with Sanctum which provide API endpoints of 
+
+    - Get Products 
+    - Create Products by Authorize User
+    - Update Products by Authorize User
+    - Delete Products by Authorize User
+    - Search Products 
+    - Register a user
+    - Login user
+    - Logout user

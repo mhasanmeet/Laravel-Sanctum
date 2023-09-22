@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Route;
 // Register auth Controller
 Route::post('/register', [AuthController::class, 'register']);
 
+// Login auth routes
+Route::post('/login', [AuthController::class, 'login']);
+
 // Public get Routes, show & search products and id
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
